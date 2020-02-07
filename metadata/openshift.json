@@ -1,0 +1,16 @@
+{
+  "docker": {
+    "maintainer": "Aurora OpenShift Utvikling <utvpaas@skatteetaten.no>",
+    "labels": {
+      "io.k8s.description": "fiona",
+      "io.openshift.tags": "openshift"
+    }
+  },
+  "doozer": {
+    "srcPath": " ",
+    "fileName": " ",
+    "destPath": "/u01/bin",
+    "destFilename": " ",
+    "cmdScript": "/u01/bin/fiona"
+  }
+}
