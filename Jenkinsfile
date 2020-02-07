@@ -13,6 +13,7 @@ def config = [
     goVersion                : 'Go 1.13',
     artifactPath             : 'bin/',
     sonarQube                : false,
+    credentialsId            : "github",
     versionStrategy          : [
         [branch: 'master', versionHint: '1']
     ]
