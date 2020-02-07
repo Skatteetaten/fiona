@@ -24,5 +24,4 @@ func main() {
 	web.InitAPI()
 
 	logrus.Fatal(http.ListenAndServe(":8080", nil))
-
 }
