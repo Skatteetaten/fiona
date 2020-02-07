@@ -22,3 +22,5 @@ def config = [
 fileLoader.withGit(config.pipelineScript, config.scriptVersion) {
   goleveranse = fileLoader.load('templates/goleveranse')
 }
+
+goleveranse.run(config.scriptVersion, config)
