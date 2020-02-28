@@ -1,0 +1,16 @@
+version: '3.3'
+
+volumes:
+  data: {}
+
+services:
+  minio:
+    image: minio/minio:latest
+    volumes:
+      - data:/data
+    ports:
+      - "9000:9000"
+    environment:
+      MINIO_ACCESS_KEY: aurora
+      MINIO_SECRET_KEY: fragleberget
+    command: server /data

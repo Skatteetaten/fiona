@@ -1,0 +1,15 @@
+GET {{apiUrl}}/listusers
+Authorization: aurora-token {{token}}
+
+###
+
+POST {{apiUrl}}/createuser
+Authorization: aurora-token {{token}}
+Content-Type: application/json
+
+{
+  "user": "testuser",
+  "path": "testuser"
+}
+
+###
