@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/test"
+	"github.com/skatteetaten/fiona/pkg/s3"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -13,8 +14,14 @@ import (
 type testUserCreator struct {
 }
 
-func (tuc testUserCreator) CreateUser(userName string, path string) (string, error) {
-	return "S3userpass", nil
+func (tuc testUserCreator) CreateUser(userName string, path string) (*s3.CreateUserResult, error) {
+	mockCreateUserResult := s3.CreateUserResult{
+		SecretKey:       "S3userpass",
+		ServiceEndpoint: "http://localhost:9000",
+		Bucket:          "utv",
+		BucketRegion:    "us-east-1",
+	}
+	return &mockCreateUserResult, nil
 }
 func (tuc testUserCreator) MakeSureBucketExists() error {
 	return nil
@@ -37,7 +44,7 @@ func TestCreateUser(t *testing.T) {
 		createUserHandler.ServeHTTP(response, request)
 
 		assert.Equal(t, http.StatusCreated, response.Code)
-		assert.True(t, isJSONString(response.Body.String()))
+		assert.True(t, isJSON(response.Body.String()))
 		assert.Contains(t, response.Body.String(), getTestAppConfig().S3Config.DefaultUserpass)
 	})
 

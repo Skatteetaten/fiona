@@ -61,6 +61,7 @@ type MinioUserManager struct {
 	bucketRegion    string
 }
 
+// CreateUserResult provides a map of return values after creating user
 type CreateUserResult struct {
 	SecretKey       string
 	ServiceEndpoint string

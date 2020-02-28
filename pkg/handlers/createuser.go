@@ -60,7 +60,7 @@ func (createuser *CreateUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Re
 		failLogAndResponse(w, "Error creating user", http.StatusInternalServerError, err)
 		return
 	}
-	responseJson, err := json.Marshal(map[string]string{
+	responseJSON, err := json.Marshal(map[string]string{
 		"secretKey":       result.SecretKey,
 		"serviceEndpoint": result.ServiceEndpoint,
 		"bucket":          result.Bucket,
@@ -73,6 +73,6 @@ func (createuser *CreateUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Re
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusCreated)
-	_, _ = fmt.Fprintf(w, "%s", responseJson)
+	_, _ = fmt.Fprintf(w, "%s", responseJSON)
 	logrus.Infof("StatusCreated: createuser %s", user.Username)
 }
