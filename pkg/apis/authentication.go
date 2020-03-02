@@ -26,11 +26,10 @@ type AuroraTokenAuthenticator struct {
 func NewAuroraTokenAuthenticator(auroraTokenLocation string) (*AuroraTokenAuthenticator, error) {
 	auroratoken, err := getAuroraToken(auroraTokenLocation)
 	if err != nil {
-		logrus.Panic("Could not initialize auroratoken. Aborting fiona")
+		return nil, fmt.Errorf("could not get auroratoken. %v", err)
 	}
 
 	return &AuroraTokenAuthenticator{auroratoken: auroratoken}, nil
-
 }
 
 // Authenticate verifies that request token is valid
@@ -61,21 +60,21 @@ func (amw *AuroraTokenAuthenticator) equalToAuroraToken(token string) bool {
 }
 
 func getAuroraToken(auroraTokenLocation string) (string, error) {
-	if fileExists(auroraTokenLocation) {
-		auroratoken, err := ioutil.ReadFile(auroraTokenLocation)
-		if err != nil {
-			logrus.Errorf("Could not read file at %s : %s", auroraTokenLocation, err)
-			return "", err
-
-		}
-		if string(auroratoken) == "" {
-			msg := fmt.Sprintf("Found empty auroratoken file on %s. Authorization token required.", auroraTokenLocation)
-			logrus.Error("msg")
-			return "", errors.New(msg)
-		}
-		return string(auroratoken), nil
+	if !fileExists(auroraTokenLocation) {
+		return "", fmt.Errorf("auroratoken file not found at %s", auroraTokenLocation)
 	}
-	return "", errors.New("No auroratoken file found")
+	auroratoken, err := ioutil.ReadFile(auroraTokenLocation)
+	if err != nil {
+		logrus.Errorf("Could not read file at %s : %s", auroraTokenLocation, err)
+		return "", err
+
+	}
+	if string(auroratoken) == "" {
+		msg := fmt.Sprintf("Found empty auroratoken file on %s. Authorization token required.", auroraTokenLocation)
+		logrus.Error("msg")
+		return "", errors.New(msg)
+	}
+	return string(auroratoken), nil
 }
 
 func fileExists(filename string) bool {

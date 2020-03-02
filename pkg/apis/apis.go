@@ -15,7 +15,6 @@ func InitAPI(config *config.Config) error {
 
 	auroraTokenAuthenticator, err := NewAuroraTokenAuthenticator(config.AuroraTokenLocation)
 	if err != nil {
-		logrus.Errorf("Error while creating initializing AuroraTokenAuthenticator : %s", err)
 		return err
 	}
 
