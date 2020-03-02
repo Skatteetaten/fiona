@@ -32,12 +32,14 @@ func TestAuthentication(t *testing.T) {
 		assert.Nil(t, hook.LastEntry())
 	})
 
-	t.Run("Should fail to initialize and panic when empty aurora token", func(t *testing.T) {
-		assert.Panics(t, func() { NewAuroraTokenAuthenticator("testdata/emptytoken") })
+	t.Run("Should fail to initialize when empty aurora token", func(t *testing.T) {
+		_, err := NewAuroraTokenAuthenticator("testdata/emptytoken")
+		assert.NotNil(t, err, "Error should not be null")
 	})
 
-	t.Run("Should fail to initialize and panic when no aurora token file", func(t *testing.T) {
-		assert.Panics(t, func() { NewAuroraTokenAuthenticator("testdata/nofile") })
+	t.Run("Should fail to initialize when no aurora token file", func(t *testing.T) {
+		_, err := NewAuroraTokenAuthenticator("testdata/nofile")
+		assert.NotNil(t, err, "Error should not be null")
 	})
 
 	t.Run("Should successfully authenticate token", func(t *testing.T) {
