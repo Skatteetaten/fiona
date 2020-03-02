@@ -9,6 +9,7 @@ import (
 func NewClient(s3config *Config) (*minio.Client, error) {
 
 	minioclient, err := minio.New(endpoint(s3config), s3config.AccessKey, s3config.SecretKey, s3config.S3UseSSL)
+	minioclient.SetCustomTransport(createTransportWithInsecureTls())
 	if err != nil {
 		logrus.Errorf("Could not create S3 client %v", err)
 		return nil, err
