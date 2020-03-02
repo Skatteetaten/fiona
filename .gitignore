@@ -83,3 +83,5 @@ tags
 TEST-junit.xml
 .idea/
 *.iml
+
+http/http-client.private.env.json
