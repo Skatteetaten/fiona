@@ -34,7 +34,7 @@ func (listusers *ListUsersHandler) ServeHTTP(w http.ResponseWriter, r *http.Requ
 
 	users, err := listusers.ListUsers()
 	if err != nil {
-		failLogAndResponse(w, "Error calling ListUsers on S3AdmClient", http.StatusNoContent, err)
+		failLogAndResponse(w, "Error calling ListUsers on S3AdmClient", http.StatusInternalServerError, err)
 		return
 	}
 

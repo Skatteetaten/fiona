@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -8,7 +9,11 @@ import (
 
 func failLogAndResponse(w http.ResponseWriter, message string, status int, err error) {
 	logrus.Errorf("%s: %s", message, err)
-	w.Header().Set("Content-Type", "application/text; charset=UTF-8")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	_, _ = fmt.Fprintf(w, "%s.", message)
+	responseJSON, err := json.Marshal(map[string]string{
+		"error": message,
+		"cause": fmt.Sprintf("%v", err),
+	})
+	_, _ = fmt.Fprintf(w, "%s", responseJSON)
 }
