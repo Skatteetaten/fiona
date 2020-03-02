@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"github.com/sirupsen/logrus"
 	"github.com/skatteetaten/fiona/pkg/apis"
 	"github.com/skatteetaten/fiona/pkg/config"
@@ -8,6 +9,8 @@ import (
 )
 
 func main() {
+	// Remove this when certificates on minio servers are fixed
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	appConfigReader := config.NewConfigReader()
 	initWebServer(appConfigReader)
 
