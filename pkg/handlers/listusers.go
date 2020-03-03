@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/minio/minio/pkg/madmin"
+	"github.com/secure-io/sio-go"
 	"github.com/sirupsen/logrus"
 	"github.com/skatteetaten/fiona/pkg/config"
 	"github.com/skatteetaten/fiona/pkg/s3"
@@ -34,7 +35,11 @@ func (listusers *ListUsersHandler) ServeHTTP(w http.ResponseWriter, r *http.Requ
 
 	users, err := listusers.ListUsers()
 	if err != nil {
-		failLogAndResponse(w, "Error calling ListUsers on S3AdmClient", http.StatusInternalServerError, err)
+		message := "Error calling ListUsers on S3AdmClient"
+		if err == sio.NotAuthentic {
+			message += ". Decryption failed. Is the secret key incorrect?"
+		}
+		failLogAndResponse(w, message, http.StatusInternalServerError, err)
 		return
 	}
 
