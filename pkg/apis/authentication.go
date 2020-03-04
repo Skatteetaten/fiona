@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-const tokenPrefix = "aurora-token"
+const tokenPrefix = "Bearer aurora-token"
 
 // AuthMiddleware is an interface for authentication
 type AuthMiddleware interface {
@@ -50,7 +50,7 @@ func (amw *AuroraTokenAuthenticator) Authenticate(next http.Handler) http.Handle
 func (amw *AuroraTokenAuthenticator) equalToAuroraToken(token string) bool {
 	trimmedToken := strings.TrimSpace(token)
 
-	if strings.Index(trimmedToken, tokenPrefix+" ") == 0 {
+	if strings.Index(strings.ToLower(trimmedToken), strings.ToLower(tokenPrefix+" ")) == 0 {
 		trimmedToken = strings.TrimPrefix(trimmedToken, tokenPrefix+" ")
 	}
 

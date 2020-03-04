@@ -44,7 +44,7 @@ func TestAuthentication(t *testing.T) {
 
 	t.Run("Should successfully authenticate token", func(t *testing.T) {
 		request, _ := http.NewRequest("GET", "http://localhost:8080/", nil)
-		request.Header.Set("Authorization", "aurora-token testtoken")
+		request.Header.Set("Authorization", "Bearer aurora-token testtoken")
 		response := httptest.NewRecorder()
 		hook := test.NewGlobal()
 		dummyHandler := dummyHandler{}
@@ -66,7 +66,7 @@ func TestAuthentication(t *testing.T) {
 
 	t.Run("Should fail authentication when wrong token", func(t *testing.T) {
 		request, _ := http.NewRequest("GET", "http://localhost:8080/", nil)
-		request.Header.Set("Authorization", "aurora-token wrongtoken")
+		request.Header.Set("Authorization", "Bearer aurora-token wrongtoken")
 		response := httptest.NewRecorder()
 		hook := test.NewGlobal()
 		dummyHandler := dummyHandler{}
