@@ -3,6 +3,8 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/minio/minio-go/v6"
+	"github.com/minio/minio/pkg/madmin"
 	"github.com/sirupsen/logrus"
 	"github.com/skatteetaten/fiona/pkg/config"
 	"github.com/skatteetaten/fiona/pkg/s3"
@@ -16,15 +18,9 @@ type CreateUserHandler struct {
 }
 
 // NewCreateUserHandler is a factory for CreateUserHandler
-func NewCreateUserHandler(config *config.Config) (*CreateUserHandler, error) {
-	bucketManager, err := s3.NewMinioBucketManager(&config.S3Config)
-	if err != nil {
-		return nil, err
-	}
-	userManager, err := s3.NewMinioUserManager(&config.S3Config)
-	if err != nil {
-		return nil, err
-	}
+func NewCreateUserHandler(config *config.Config, adminClient *madmin.AdminClient, minioClient *minio.Client) (*CreateUserHandler, error) {
+	bucketManager := s3.NewMinioBucketManager(&config.S3Config, minioClient)
+	userManager := s3.NewMinioUserManager(&config.S3Config, adminClient)
 
 	return &CreateUserHandler{
 		BucketManager: bucketManager,

@@ -10,9 +10,12 @@ import (
 func TestS3endpoint(t *testing.T) {
 	t.Run("Should create endpoint", func(t *testing.T) {
 
-		endpoint := endpoint(getTestAppConfig())
+		conf := getTestAppConfig()
+		endpoint := endpoint(conf)
+		serviceEndpoint := conf.getServiceEndpoint()
 
 		assert.Equal(t, "minio:9000", endpoint)
+		assert.Equal(t, "http://minio:9000", serviceEndpoint)
 	})
 }
 
@@ -51,9 +54,8 @@ func (tbc testBucketClient) SetBucketPolicy(bucketName, policy string) error {
 
 func TestS3bucketmanager(t *testing.T) {
 	t.Run("Should create new bucketmanager", func(t *testing.T) {
-
-		newbucketmanager, err := NewMinioBucketManager(getTestAppConfig())
-		assert.Nil(t, err)
+		dummyClient, _ := NewClient(getTestAppConfig())
+		newbucketmanager := NewMinioBucketManager(getTestAppConfig(), dummyClient)
 		assert.NotNil(t, newbucketmanager)
 	})
 

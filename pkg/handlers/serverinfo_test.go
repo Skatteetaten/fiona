@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/minio/minio/pkg/madmin"
+	"github.com/skatteetaten/fiona/pkg/s3"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -30,8 +31,8 @@ func (tsi testServerInfo) ServerInfo() (madmin.InfoMessage, error) {
 
 func TestServerInfo(t *testing.T) {
 	t.Run("Should create new ServerInfoHandler", func(t *testing.T) {
-		serverInfoHandler, err := NewServerInfoHandler(getTestAppConfig())
-		assert.Nil(t, err)
+		dummyAdmClient, _ := s3.NewAdmClient(&getTestAppConfig().S3Config)
+		serverInfoHandler := NewServerInfoHandler(dummyAdmClient)
 		assert.NotNil(t, serverInfoHandler)
 	})
 

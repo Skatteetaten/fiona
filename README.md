@@ -45,7 +45,7 @@ Here is a summary of the environment variables used by Fiona:
 | FIONA_S3_USESSL | false | Set to true if the S3 server uses SSL |
 | FIONA_S3_REGION | us-east-1 | The region of the S3 server, also used for the bucket |
 | FIONA_RANDOMPASS | false | Set to true if each user should get a separate password (recommended)|
-| FIONA_DEFAULTPASS | S3userpass | The returned userpass if FIONA_RANDOMPASS is false |
+| FIONA_DEFAULT_PASSWORD | S3userpass | The returned userpass if FIONA_RANDOMPASS is false |
 | FIONA_ACCESS_KEY | aurora | Access key for the S3 server admin (recommended to override) |
 | FIONA_SECRET_KEY | fragleberget | Access secret for the S3 server admin (recommended to override) |
 | FIONA_DEBUG | false | Set to true to enable debug logging |

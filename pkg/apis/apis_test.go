@@ -20,15 +20,19 @@ func (ta testAmw) Authenticate(next http.Handler) http.Handler {
 
 func TestApis(t *testing.T) {
 	t.Run("Should initialize web router without failing", func(t *testing.T) {
-		InitAPI(getTestAppConfig())
+		dummyAdmClient, _ := s3.NewAdmClient(&getTestAppConfig().S3Config)
+		dummyClient, _ := s3.NewClient(&getTestAppConfig().S3Config)
+		InitAPI(getTestAppConfig(), dummyAdmClient, dummyClient)
 	})
 
 	t.Run("Should return correct welcome string on root request to router", func(t *testing.T) {
 		request, _ := http.NewRequest("GET", "http://localhost:8080/", nil)
 		request.Header.Set("Authorization", "aurora-token ")
 		response := httptest.NewRecorder()
+		dummyAdmClient, _ := s3.NewAdmClient(&getTestAppConfig().S3Config)
+		dummyClient, _ := s3.NewClient(&getTestAppConfig().S3Config)
 
-		routerHandler, _ := createRouter(getTestAppConfig(), &testAmw{})
+		routerHandler, _ := createRouter(getTestAppConfig(), &testAmw{}, dummyAdmClient, dummyClient)
 		routerHandler.ServeHTTP(response, request)
 
 		assert.Equal(t, http.StatusOK, response.Code, "OK response is expected")
@@ -51,4 +55,12 @@ func getTestAppConfig() *config.Config {
 		},
 		AuroraTokenLocation: "testdata/token",
 	}
+}
+
+func TestInitManagementHandler(t *testing.T) {
+	dummyAdmClient, _ := s3.NewAdmClient(&getTestAppConfig().S3Config)
+
+	routingHandler := InitManagementHandler(dummyAdmClient)
+
+	assert.NotNil(t, routingHandler, "Routing handler should not be nil")
 }

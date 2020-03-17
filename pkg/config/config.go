@@ -10,6 +10,13 @@ import (
 
 const auroraTokenLocation = "./aurora-token"
 
+// Environment variables for external reference
+const (
+	FionaDefaultPassword = "FIONA_DEFAULT_PASSWORD"
+	FionaSecretKey       = "FIONA_SECRET_KEY"
+	FionaAccessKey       = "FIONA_ACCESS_KEY"
+)
+
 // Config for the S3 access
 type Config struct {
 	S3Config            s3.Config
@@ -44,9 +51,9 @@ func (m *ConfReader) ReadConfig() (*Config, error) {
 			S3UseSSL:        useSsl,
 			S3Region:        getEnvOrDefault("FIONA_S3_REGION", "us-east-1"),
 			RandomUserpass:  randomUserpass,
-			DefaultUserpass: getEnvOrDefault("FIONA_DEFAULTPASS", "S3userpass"),
-			AccessKey:       getEnvOrDefault("FIONA_ACCESS_KEY", "aurora"),
-			SecretKey:       getEnvOrDefault("FIONA_SECRET_KEY", "fragleberget"),
+			DefaultUserpass: getEnvOrDefault(FionaDefaultPassword, "S3userpass"),
+			AccessKey:       getEnvOrDefault(FionaAccessKey, "aurora"),
+			SecretKey:       getEnvOrDefault(FionaSecretKey, "fragleberget"),
 			DefaultBucket:   getEnvOrDefault("FIONA_DEFAULTBUCKET", "utv"),
 		},
 		DebugLog:            debuglog,

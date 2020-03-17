@@ -6,8 +6,6 @@ import (
 	"github.com/minio/minio/pkg/madmin"
 	"github.com/secure-io/sio-go"
 	"github.com/sirupsen/logrus"
-	"github.com/skatteetaten/fiona/pkg/config"
-	"github.com/skatteetaten/fiona/pkg/s3"
 	"net/http"
 )
 
@@ -21,13 +19,8 @@ type ListUsersHandler struct {
 }
 
 // NewListUsersHandler is a factory for ListUsersHandlers
-func NewListUsersHandler(config *config.Config) (*ListUsersHandler, error) {
-	admClient, err := s3.NewAdmClient(&config.S3Config)
-	if err != nil {
-		return nil, err
-	}
-
-	return &ListUsersHandler{admClient}, nil
+func NewListUsersHandler(admClient *madmin.AdminClient) *ListUsersHandler {
+	return &ListUsersHandler{admClient}
 }
 
 // ServeHTTP handles the requests for ListUsersHandler

@@ -2,6 +2,7 @@ package s3
 
 import (
 	"fmt"
+	"github.com/minio/minio/pkg/madmin"
 	"github.com/sirupsen/logrus"
 	"math/rand"
 	"strings"
@@ -70,20 +71,15 @@ type CreateUserResult struct {
 }
 
 // NewMinioUserManager is a factory for MinioUserManager
-func NewMinioUserManager(s3config *Config) (*MinioUserManager, error) {
-	minioAdmClient, err := NewAdmClient(s3config)
-	if err != nil {
-		return nil, err
-	}
-
+func NewMinioUserManager(s3config *Config, adminClient *madmin.AdminClient) *MinioUserManager {
 	return &MinioUserManager{
-		userClient:      minioAdmClient,
+		userClient:      adminClient,
 		randomUserpass:  s3config.RandomUserpass,
 		defaultUserpass: s3config.DefaultUserpass,
 		defaultBucket:   s3config.DefaultBucket,
 		serviceEndpoint: s3config.getServiceEndpoint(),
 		bucketRegion:    s3config.S3Region,
-	}, nil
+	}
 }
 
 // CreateUser creates a user with access policy for a folder path

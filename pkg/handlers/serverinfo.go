@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"github.com/minio/minio/pkg/madmin"
 	"github.com/sirupsen/logrus"
-	"github.com/skatteetaten/fiona/pkg/config"
-	"github.com/skatteetaten/fiona/pkg/s3"
 	"net/http"
 )
 
@@ -20,13 +18,8 @@ type ServerInfoHandler struct {
 }
 
 // NewServerInfoHandler is a factory for ServerInfoHandler
-func NewServerInfoHandler(config *config.Config) (*ServerInfoHandler, error) {
-	admClient, err := s3.NewAdmClient(&config.S3Config)
-	if err != nil {
-		return nil, err
-	}
-
-	return &ServerInfoHandler{admClient}, nil
+func NewServerInfoHandler(admClient *madmin.AdminClient) *ServerInfoHandler {
+	return &ServerInfoHandler{admClient}
 }
 
 // ServeHTTP handles the requests for ServerInfoHandler

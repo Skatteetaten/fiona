@@ -29,7 +29,9 @@ func (tuc testUserCreator) MakeSureBucketExists() error {
 
 func TestCreateUser(t *testing.T) {
 	t.Run("Should create new CreateUserHandler", func(t *testing.T) {
-		createUserHandler, err := NewCreateUserHandler(getTestAppConfig())
+		dummyAdmClient, _ := s3.NewAdmClient(&getTestAppConfig().S3Config)
+		dummyClient, _ := s3.NewClient(&getTestAppConfig().S3Config)
+		createUserHandler, err := NewCreateUserHandler(getTestAppConfig(), dummyAdmClient, dummyClient)
 		assert.Nil(t, err)
 		assert.NotNil(t, createUserHandler)
 	})

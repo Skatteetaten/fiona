@@ -2,6 +2,7 @@ package s3
 
 import (
 	"fmt"
+	"github.com/minio/minio-go/v6"
 	"github.com/sirupsen/logrus"
 )
 
@@ -39,13 +40,8 @@ const bucketPolicy = `{
 }`
 
 // NewMinioBucketManager is a factory for MinioBucketManager
-func NewMinioBucketManager(s3config *Config) (*MinioBucketManager, error) {
-	minioclient, err := NewClient(s3config)
-	if err != nil {
-		return nil, err
-	}
-
-	return &MinioBucketManager{minioclient, *s3config}, nil
+func NewMinioBucketManager(s3config *Config, minioClient *minio.Client) *MinioBucketManager {
+	return &MinioBucketManager{minioClient, *s3config}
 }
 
 // MakeSureBucketExists checks that the default bucket exists and creates it if not

@@ -4,21 +4,26 @@ import (
 	"fmt"
 	ghandlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/minio/minio-go/v6"
+	"github.com/minio/minio/pkg/madmin"
 	"github.com/sirupsen/logrus"
 	"github.com/skatteetaten/fiona/pkg/config"
 	"github.com/skatteetaten/fiona/pkg/handlers"
+	managementhandlers "github.com/skatteetaten/fiona/pkg/handlers/management"
+	"github.com/skatteetaten/fiona/pkg/management"
+	"github.com/skatteetaten/fiona/pkg/management/env"
 	"net/http"
 )
 
 // InitAPI initializes API with routing
-func InitAPI(config *config.Config) error {
+func InitAPI(config *config.Config, adminClient *madmin.AdminClient, minioClient *minio.Client) error {
 
 	auroraTokenAuthenticator, err := NewAuroraTokenAuthenticator(config.AuroraTokenLocation)
 	if err != nil {
 		return err
 	}
 
-	routeHandler, err := createRouter(config, auroraTokenAuthenticator)
+	routeHandler, err := createRouter(config, auroraTokenAuthenticator, adminClient, minioClient)
 	if err != nil {
 		logrus.Errorf("Error while creating router: %s", err)
 		return err
@@ -29,11 +34,11 @@ func InitAPI(config *config.Config) error {
 	return nil
 }
 
-func createRouter(config *config.Config, amw AuthMiddleware) (http.Handler, error) {
+func createRouter(config *config.Config, amw AuthMiddleware, adminClient *madmin.AdminClient, minioClient *minio.Client) (http.Handler, error) {
 
 	router := mux.NewRouter()
 
-	if err := addRoutes(router, amw, config); err != nil {
+	if err := addRoutes(router, amw, config, adminClient, minioClient); err != nil {
 		return nil, err
 	}
 
@@ -44,22 +49,15 @@ func createRouter(config *config.Config, amw AuthMiddleware) (http.Handler, erro
 	return loggedRouter, nil
 }
 
-func addRoutes(router *mux.Router, amw AuthMiddleware, config *config.Config) error {
-	listusersHandler, err := handlers.NewListUsersHandler(config)
-	if err != nil {
-		return err
-	}
-	serverinfoHandler, err := handlers.NewServerInfoHandler(config)
-	if err != nil {
-		return err
-	}
-	createuserHandler, err := handlers.NewCreateUserHandler(config)
+func addRoutes(router *mux.Router, amw AuthMiddleware, config *config.Config, adminClient *madmin.AdminClient, minioClient *minio.Client) error {
+	listusersHandler := handlers.NewListUsersHandler(adminClient)
+	serverinfoHandler := handlers.NewServerInfoHandler(adminClient)
+	createuserHandler, err := handlers.NewCreateUserHandler(config, adminClient, minioClient)
 	if err != nil {
 		return err
 	}
 
 	router.HandleFunc("/", roothandler)
-	router.HandleFunc("/healthcheck", handlers.HealthCheckHandler).Methods("GET")
 	router.Handle("/listusers", amw.Authenticate(listusersHandler)).Methods("GET")
 	router.Handle("/serverinfo", amw.Authenticate(serverinfoHandler)).Methods("GET")
 	router.Handle("/createuser", amw.Authenticate(createuserHandler)).Methods("POST")
@@ -69,4 +67,19 @@ func addRoutes(router *mux.Router, amw AuthMiddleware, config *config.Config) er
 
 func roothandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Fiona says hi at %s!", r.Host)
+}
+
+// InitManagementHandler initializes the management interface with /health and /env endpoints
+func InitManagementHandler(admClient *madmin.AdminClient) *management.RoutingHandler {
+	managementHandler := management.CreateRoutingHandler()
+
+	fionaHealthRetriever := managementhandlers.NewFionaHealthRetriever(admClient)
+
+	fionaEnvRetriever := env.GetDefaultEnvRetriever()
+	fionaEnvRetriever.SetKeysToMask([]string{config.FionaDefaultPassword, config.FionaSecretKey, config.FionaAccessKey})
+
+	managementHandler.RouteApplicationHealthRetriever(fionaHealthRetriever)
+	managementHandler.RouteApplicationEnvRetriever(fionaEnvRetriever)
+
+	return managementHandler
 }

@@ -49,10 +49,10 @@ Errors may return content as plain, non-JSON strings.
 * **Success Response:**
   
   The user is created with access policy to the specified basepath to create, read and delete objects. 
-  A JSON string is returned, to be used as a password with the username when accessing the S3 server. 
+  A JSON structure is returned with information necessary to use the S3 bucket.
 
   * **Code:** 201 CREATED <br />
-    **Content:** `"user-specific-password"`
+    **Content:** `{"secretKey":"aSecretKey","serviceEndpoint":"http://minio.company.com:80","bucket":"utv","bucketRegion":"us-east-1"}`
  
 * **Error Response:**
 
@@ -71,7 +71,7 @@ Errors may return content as plain, non-JSON strings.
   
   OR
 
-  * **Code:** 403 BAD REQUEST <br />
+  * **Code:** 400 BAD REQUEST <br />
     **Content:** `Could not read request body`
 
   
@@ -167,7 +167,6 @@ Errors may return content as plain, non-JSON strings.
   curl -H 'Content-Type: application/json' -H 'Authorization: aurora-token token' http://localhost:9000/serverinfo`
 ```
 
-
 ## Access control
   
 Fiona uses an HTTP Authorization request header for access control. 
@@ -183,3 +182,46 @@ Fiona uses an HTTP Authorization request header for access control.
 * \<credentials\>
 
   a secret string stored with the application
+
+## Management interface
+
+Fiona provides a management-interface for health check and environment variables. The endpoints are made available on a separate port, 
+usually 8081.
+
+### Discovery endpoint
+
+  The management interface has a discovery endpoint that provides the endpoints for health and env. Use this to discover 
+  the other endpoints.
+
+* **URL**
+
+  /management
+
+* **Method:**
+
+  `GET`
+
+*  **URL Params**
+
+  None
+
+* **Data Params**
+  
+  None
+
+* **Authorization**
+
+  None
+
+* **Success Response:**
+
+  Returns a JSON structure of the configured management interface endpoints.
+
+  * **Code:** 200 OK <br />
+    **Content:** `{"_links":{"env":{"href":"http://localhost:8081/env"},"health":{"href":"http://localhost:8081/health"}}}`
+
+* **Sample Call:**
+
+```
+  curl -H 'Content-Type: application/json' http://localhost:8081/management`
+```

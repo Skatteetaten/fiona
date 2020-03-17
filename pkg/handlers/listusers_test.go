@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/minio/minio/pkg/madmin"
+	"github.com/skatteetaten/fiona/pkg/s3"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -28,8 +29,8 @@ func (ul testUserLister) ListUsers() (map[string]madmin.UserInfo, error) {
 
 func TestListUsers(t *testing.T) {
 	t.Run("Should create new ListUsersHandler", func(t *testing.T) {
-		listusersHandler, err := NewListUsersHandler(getTestAppConfig())
-		assert.Nil(t, err)
+		dummyAdmClient, _ := s3.NewAdmClient(&getTestAppConfig().S3Config)
+		listusersHandler := NewListUsersHandler(dummyAdmClient)
 		assert.NotNil(t, listusersHandler)
 	})
 
