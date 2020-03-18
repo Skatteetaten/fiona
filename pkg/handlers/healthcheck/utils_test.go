@@ -1,4 +1,4 @@
-package management
+package healthcheck
 
 import (
 	"github.com/skatteetaten/fiona/pkg/config"

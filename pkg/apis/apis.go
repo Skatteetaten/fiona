@@ -7,11 +7,11 @@ import (
 	"github.com/minio/minio-go/v6"
 	"github.com/minio/minio/pkg/madmin"
 	"github.com/sirupsen/logrus"
+	management "github.com/skatteetaten/aurora-management-interface-go"
+	"github.com/skatteetaten/aurora-management-interface-go/env"
 	"github.com/skatteetaten/fiona/pkg/config"
 	"github.com/skatteetaten/fiona/pkg/handlers"
-	managementhandlers "github.com/skatteetaten/fiona/pkg/handlers/management"
-	"github.com/skatteetaten/fiona/pkg/management"
-	"github.com/skatteetaten/fiona/pkg/management/env"
+	"github.com/skatteetaten/fiona/pkg/handlers/healthcheck"
 	"net/http"
 )
 
@@ -73,7 +73,7 @@ func roothandler(w http.ResponseWriter, r *http.Request) {
 func InitManagementHandler(admClient *madmin.AdminClient) *management.RoutingHandler {
 	managementHandler := management.CreateRoutingHandler()
 
-	fionaHealthRetriever := managementhandlers.NewFionaHealthRetriever(admClient)
+	fionaHealthRetriever := healthcheck.NewFionaHealthRetriever(admClient)
 
 	fionaEnvRetriever := env.GetDefaultEnvRetriever()
 	fionaEnvRetriever.SetKeysToMask([]string{config.FionaDefaultPassword, config.FionaSecretKey, config.FionaAccessKey})

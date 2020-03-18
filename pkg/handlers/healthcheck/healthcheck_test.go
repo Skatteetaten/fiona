@@ -1,5 +1,5 @@
 // healthcheck_test.go
-package management
+package healthcheck
 
 import (
 	"github.com/minio/minio/pkg/madmin"

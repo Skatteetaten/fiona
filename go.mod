@@ -10,5 +10,6 @@ require (
 	github.com/minio/minio-go/v6 v6.0.47
 	github.com/secure-io/sio-go v0.3.0
 	github.com/sirupsen/logrus v1.4.2
+	github.com/skatteetaten/aurora-management-interface-go v0.1.1
 	github.com/stretchr/testify v1.4.0
 )

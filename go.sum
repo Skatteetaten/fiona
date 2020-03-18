@@ -254,6 +254,8 @@ github.com/shirou/gopsutil v2.18.12+incompatible/go.mod h1:5b4v6he4MtMOwMlS0TUMT
 github.com/sirupsen/logrus v1.2.0/go.mod h1:LxeOpSwHxABJmUn/MG1IvRgCAasNZTLOkJPxbbu5VWo=
 github.com/sirupsen/logrus v1.4.2 h1:SPIRibHv4MatM3XXNO2BJeFLZwZ2LvZgfQ5+UNI2im4=
 github.com/sirupsen/logrus v1.4.2/go.mod h1:tLMulIdttU9McNUspp0xgXVQah82FyeX6MwdIuYE2rE=
+github.com/skatteetaten/aurora-management-interface-go v0.1.1 h1:46Y/BBIa0X7lzp4DjEU2puPQSrmjSCK5tPw5d1plZU4=
+github.com/skatteetaten/aurora-management-interface-go v0.1.1/go.mod h1:zt/k9ZlNF3l9mYkKcxq0aEC5tXz1yIEWELe0Yf0Y6Sk=
 github.com/skyrings/skyring-common v0.0.0-20160929130248-d1c0bb1cbd5e/go.mod h1:d8hQseuYt4rJoOo21lFzYJdhMjmDqLY++ayArbgYjWI=
 github.com/smartystreets/assertions v0.0.0-20180927180507-b2de0cb4f26d/go.mod h1:OnSkiWE9lh6wB0YB77sQom3nweQdgAjqCqsofrRNTgc=
 github.com/smartystreets/assertions v0.0.0-20190401211740-f487f9de1cd3 h1:hBSHahWMEgzwRyS6dRpxY0XyjZsHyQ61s084wo5PJe0=

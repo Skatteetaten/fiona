@@ -1,10 +1,10 @@
-package management
+package healthcheck
 
 import (
 	"fmt"
 	"github.com/minio/minio/pkg/madmin"
 	"github.com/sirupsen/logrus"
-	"github.com/skatteetaten/fiona/pkg/management/health"
+	"github.com/skatteetaten/aurora-management-interface-go/health"
 	"time"
 )
 
