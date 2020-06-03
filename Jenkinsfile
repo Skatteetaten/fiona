@@ -10,7 +10,7 @@ def config = [
     iqOrganizationName       : 'Team AOS',
     openShiftBaseImage       : 'turbo',
     openShiftBaseImageVersion: 'latest',
-    goVersion                : 'Go 1.13',
+    goVersion                : '1.14',
     artifactPath             : 'bin/',
     sonarQube                : false,
     credentialsId            : "github",
