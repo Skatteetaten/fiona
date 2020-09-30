@@ -8,13 +8,15 @@ The endpoints use JSON both for POST payloads (body) and for returned informatio
 
 Errors may return content as plain, non-JSON strings.  
 
-### Create User
+### Create User with Policy for a Path
 
-  Creates a user with a policy on a specific folder and returns access information.
+  Creates a user with a policy on a specific path for a bucket and returns access information.
+  
+  Precondition: The named bucket must exist
 
 * **URL**
 
-  /createuser
+  /buckets/{bucketname}/paths/{path}/userpolicies/
 
 * **Method:**
   
@@ -30,9 +32,9 @@ Errors may return content as plain, non-JSON strings.
   
   **Required**
   
-  `"user":"username"`
+  `"username": <username>`
   
-  `"path":"basepath"`
+  `"access": <list of access specifiers>`
   
   **Optional**
   
@@ -40,7 +42,7 @@ Errors may return content as plain, non-JSON strings.
   
   **Example**
   
-  `{"user":"username", "path":"basepath"}`
+  `{"username":"testuser", "access":["READ", "WRITE", "DELETE"]}`
   
 * **Authorization**
 
@@ -52,7 +54,7 @@ Errors may return content as plain, non-JSON strings.
   A JSON structure is returned with information necessary to use the S3 bucket.
 
   * **Code:** 201 CREATED <br />
-    **Content:** `{"secretKey":"aSecretKey","serviceEndpoint":"http://minio.company.com:80","bucket":"utv","bucketRegion":"us-east-1"}`
+    **Content:** `{"accessKey":"aUserName","secretKey":"someSecretKey","host":"https://localhost:9000"}`
  
 * **Error Response:**
 
@@ -62,7 +64,7 @@ Errors may return content as plain, non-JSON strings.
   OR
 
   * **Code:** 422 UNPROCESSABLE ENTITY <br />
-    **Content:** `Could not unmarshal body`
+    **Content:** `Could not unmarshal body` or `Error creating user: Bucket does not exist`
 
   OR
 
@@ -78,7 +80,7 @@ Errors may return content as plain, non-JSON strings.
 * **Sample Call:**
 
 ```
-  curl -d '{"user":"testuser", "path":"testpath"}' -H 'Content-Type: application/json' -H 'Authorization: aurora-token token' http://localhost:9000/createuser`
+  curl -d '{"username":"testuser", "access":["READ", "WRITE", "DELETE"]}' -H 'Content-Type: application/json' -H 'Authorization: aurora-token token' http://localhost:8080/buckets/abucketname/paths/apath/userpolicies/
 ```
   
 ### List users
@@ -121,7 +123,7 @@ Errors may return content as plain, non-JSON strings.
 * **Sample Call:**
 
 ```
-  curl -H 'Content-Type: application/json' -H 'Authorization: aurora-token token' http://localhost:9000/listusers`
+  curl -H 'Content-Type: application/json' -H 'Authorization: aurora-token token' http://localhost:9000/listusers
 ```
 
 ### Server info
@@ -164,7 +166,7 @@ Errors may return content as plain, non-JSON strings.
 * **Sample Call:**
 
 ```
-  curl -H 'Content-Type: application/json' -H 'Authorization: aurora-token token' http://localhost:9000/serverinfo`
+  curl -H 'Content-Type: application/json' -H 'Authorization: aurora-token token' http://localhost:9000/serverinfo
 ```
 
 ## Access control
@@ -223,5 +225,5 @@ usually 8081.
 * **Sample Call:**
 
 ```
-  curl -H 'Content-Type: application/json' http://localhost:8081/management`
+  curl -H 'Content-Type: application/json' http://localhost:8081/management
 ```

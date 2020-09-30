@@ -50,17 +50,24 @@ func createRouter(config *config.Config, amw AuthMiddleware, adminClient *madmin
 }
 
 func addRoutes(router *mux.Router, amw AuthMiddleware, config *config.Config, adminClient *madmin.AdminClient, minioClient *minio.Client) error {
-	listusersHandler := handlers.NewListUsersHandler(adminClient)
-	serverinfoHandler := handlers.NewServerInfoHandler(adminClient)
-	createuserHandler, err := handlers.NewCreateUserHandler(config, adminClient, minioClient)
+	router.HandleFunc("/", roothandler)
+
+	createAppUserHandler, err := handlers.NewCreateAppUserHandler(&config.S3Config, adminClient, minioClient)
 	if err != nil {
 		return err
 	}
+	router.Handle("/buckets/{bucketname}/paths/{path}/userpolicies/", amw.Authenticate(createAppUserHandler)).Methods("POST")
 
-	router.HandleFunc("/", roothandler)
+	// Deprecated methods.  Not REST based.
+	listusersHandler := handlers.NewListUsersHandler(adminClient)
+	serverinfoHandler := handlers.NewServerInfoHandler(adminClient)
+	// createuserHandler, err := handlers.NewCreateUserHandler(config, adminClient, minioClient)
+	if err != nil {
+		return err
+	}
 	router.Handle("/listusers", amw.Authenticate(listusersHandler)).Methods("GET")
 	router.Handle("/serverinfo", amw.Authenticate(serverinfoHandler)).Methods("GET")
-	router.Handle("/createuser", amw.Authenticate(createuserHandler)).Methods("POST")
+	// router.Handle("/createuser", amw.Authenticate(createuserHandler)).Methods("POST")
 
 	return nil
 }

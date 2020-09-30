@@ -23,8 +23,14 @@ func (tuc testUserCreator) CreateUser(userName string, path string) (*s3.CreateU
 	}
 	return &mockCreateUserResult, nil
 }
+func (tuc testUserCreator) CreateAppUser(createAppUserInput *s3.CreateAppUserInput) (*s3.CreateAppUserResult, error) {
+	return nil, nil
+}
 func (tuc testUserCreator) MakeSureBucketExists() error {
 	return nil
+}
+func (tuc testUserCreator) BucketNameExists(bucketName string) (bool, error) {
+	return true, nil
 }
 
 func TestCreateUser(t *testing.T) {
@@ -71,9 +77,9 @@ func TestCreateUser(t *testing.T) {
 	})
 }
 
-func createTestUserHandler(tuc testUserCreator) CreateUserHandler {
+func createTestUserHandler(testmanager testUserCreator) CreateUserHandler {
 	return CreateUserHandler{
-		tuc,
-		tuc,
+		testmanager,
+		testmanager,
 	}
 }

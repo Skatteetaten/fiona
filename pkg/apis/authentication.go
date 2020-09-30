@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-const tokenPrefix = "Bearer aurora-token"
+const tokenPrefix = "aurora-token"
 
 // AuthMiddleware is an interface for authentication
 type AuthMiddleware interface {

@@ -18,3 +18,16 @@ func NewAdmClient(s3config *Config) (*madmin.AdminClient, error) {
 
 	return adminclient, nil
 }
+
+// NewAdmClientForExternalAccess creates the S3 admin client for externally supplied access parameters
+func NewAdmClientForExternalAccess(minioAccessConfig *MinioAccessConfig) (*madmin.AdminClient, error) {
+	endpoint := minioAccessConfig.Host + ":" + minioAccessConfig.Port
+	logrus.Infof("Creating minio adminclient to %s using ssl=%t", endpoint, minioAccessConfig.UseSsl)
+	adminclient, err := madmin.New(endpoint, minioAccessConfig.AccessKey, minioAccessConfig.SecretKey, minioAccessConfig.UseSsl)
+	if err != nil {
+		logrus.Errorf("Could not create minio admin client %v", err)
+		return nil, err
+	}
+
+	return adminclient, nil
+}

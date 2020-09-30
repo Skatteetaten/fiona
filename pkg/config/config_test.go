@@ -7,6 +7,9 @@ import (
 
 func TestConfig(t *testing.T) {
 	t.Run("Should return config with default values", func(t *testing.T) {
+		if getEnvBoolOrDefault("FIONA_DEBUG", false) {
+			t.Skip("Skipping default config test when FIONA_DEBUG is true")
+		}
 		confreader := ConfReader{}
 
 		config, err := confreader.ReadConfig()

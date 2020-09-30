@@ -9,6 +9,7 @@ import (
 // BucketManager is an interfacce for bucket management
 type BucketManager interface {
 	MakeSureBucketExists() error
+	BucketNameExists(bucketName string) (bool, error)
 }
 
 type bucketClient interface {
@@ -47,6 +48,11 @@ func NewMinioBucketManager(s3config *Config, minioClient *minio.Client) *MinioBu
 // MakeSureBucketExists checks that the default bucket exists and creates it if not
 func (bucketManager *MinioBucketManager) MakeSureBucketExists() error {
 	return bucketManager.makeSureNamedBucketExists(bucketManager.DefaultBucket)
+}
+
+// BucketNameExists checks that the named bucket exists
+func (bucketManager *MinioBucketManager) BucketNameExists(bucketName string) (bool, error) {
+	return bucketManager.BucketExists(bucketName)
 }
 
 // MakeSureNamedBucketExists checks that the named bucket exists and creates it if not

@@ -7,7 +7,7 @@ Fiona is a http based service to conveniently set up users and a standard set of
 The main purpose is to provide a setup of separately available "folders" within a bucket for specific 
 users to make simple object storage available for clients. 
 
-The most important endpoint is the `/createuser` endpoint, described in [the API documentation](./API.md). 
+The endpoints are described in [the API documentation](./API.md). 
 
 The component is named after the Fiona Fraggle (https://muppet.fandom.com/wiki/Fiona_Fraggle). 
 
